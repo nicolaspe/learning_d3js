@@ -2,10 +2,100 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <script type="text/javascript" src="d3.min.js"></script>
-    <title>First D3.js page</title>
+    <script src="d3.min.js"></script>
+    <style>
+      .chart div {
+        font: 10px sans-serif;
+        background-color: steelblue;
+        text-align: right;
+        padding: 3px;
+        margin: 1px;
+        color: white;
+      }
+      .chart div:hover {
+        background-color: purple;
+      }
+      .chart rect {
+        fill: steelblue;
+      }
+      .chart rect:hover {
+        fill: purple;
+      }
+      .chart text {
+        fill: white;
+        font: 10px sans-serif;
+        text-anchor: end;
+      }
+    </style>
+
+    <title>npe D3.js</title>
   </head>
   <body>
-    <p>Hello!</p>
+    <h2>First D3.js page</h2>
+
+    <p>HTML Graph</p>
+    <div class="chart">
+      <div style="width: 40px;">4</div>
+      <div style="width: 80px;">8</div>
+      <div style="width: 150px;">15</div>
+      <div style="width: 160px;">16</div>
+      <div style="width: 230px;">23</div>
+      <div style="width: 420px;">42</div>
+    </div>
+
+    <p>D3.js chart</p>
+    <div class="chart cd3"></div>
+
+    <p>SVG chart</p>
+    <svg class="chart csvg"></svg>
+
+    <script>
+      var data = [4, 8, 15, 16, 23, 42],
+          width = 420,
+          barHeight = 20;
+
+      var x = d3.scaleLinear()
+        .domain([0, d3.max(data)])
+        .range([0, width]);
+
+      var svgChart = d3.select(".csvg")
+        .attr("width", width);
+
+      // TSV data load
+      d3.tsv("data.tsv", type, function(error, data){
+        x.domain([0, d3.max(data, function(d){ return d.value; })]);
+
+        // D3js HTML chart
+        d3.select(".cd3")
+          .selectAll("div")
+            .data(data)
+            .enter().append("div")
+            .style("width", function(d){ return x(d.value) = "px"; })
+            .text(function(d){ return d.value; });
+
+        // D3js SVG chart
+        svgChart.attr("height", barHeight * data.length);
+
+        var bar = svgChart.selectAll("g")
+          .data(data)
+          .enter().append("g")
+          .attr("transform", function(d,i){ return "translate(0," + i*barHeight + ")"; });
+
+        bar.append("rect")
+          .attr("width", function(d){ return x(d)+"px"; })
+          .attr("height", barHeight - 1);
+
+        bar.append("text")
+          .attr("x", function(d) { return x(d.value)-3; })
+          .attr("y", barHeight/2)
+          .attr("dy", "0.35em")
+          .text(function(d){ return d.value; });
+      });
+
+      function type(d){
+        d.value = +d.value; // coerce to number
+        return d;
+      }
+    </script>
   </body>
 </html>
