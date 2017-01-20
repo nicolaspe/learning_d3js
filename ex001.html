@@ -62,7 +62,7 @@
         .attr("width", width);
 
       // TSV data load
-      d3.tsv("data.tsv", type, function(error, data){
+      d3.tsv("https://github.com/nicolaspe/learning_d3js/blob/master/data.tsv", type, function(error, data){
         x.domain([0, d3.max(data, function(d){ return d.value; })]);
 
         // D3js HTML chart
