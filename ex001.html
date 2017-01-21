@@ -60,16 +60,16 @@
         .attr("width", width);
 
       // TSV data load
-      d3.csv("https://raw.githubusercontent.com/nicolaspe/learning_d3js/master/data.csv", type, function(error, data){
+      d3.tsv("https://raw.githubusercontent.com/nicolaspe/learning_d3js/master/data.tsv", type, function(error, data){
         x.domain([0, d3.max(data, function(d){ return d.value; })]);
 
         // D3js HTML chart
-        // d3.select(".cd3")
-        //   .selectAll("div")
-        //     .data(data)
-        //     .enter().append("div")
-        //     .style("width", function(d){ return x(d.value) = "px"; })
-        //     .text(function(d){ return d.value; });
+        var ch1 = d3.select(".cd3")
+          .selectAll("div")
+          .data(data)
+          .enter().append("div")
+          .style("width", function(d){ return x(d.value) + "px"; })
+          .text(function(d){ return d.value; });
 
         // D3js SVG chart
         svgChart.attr("height", barHeight * data.length);
