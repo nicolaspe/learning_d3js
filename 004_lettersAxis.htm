@@ -6,16 +6,8 @@
 
 		<script src="d3.min.js"></script>
     <style>
-      .chart div {
-        font: 10px sans-serif;
-        background-color: steelblue;
-        text-align: right;
-        padding: 3px;
-        margin: 1px;
-        color: white;
-      }
-      .chart div:hover {
-        background-color: purple;
+      .chart {
+				box-shadow: 0px 4px 4px 0px rgba(0,0,0, 0.2);
       }
       .chart rect {
         fill: steelblue;
@@ -24,6 +16,7 @@
         fill: purple;
       }
 			.axis text {
+				fill: #000;
 				font: 10px sans-serif;
 			}
 			.axis path,
@@ -52,7 +45,8 @@
 		var xAxis = d3.axisBottom()
 			.scale(x);
 		var yAxis = d3.axisLeft()
-			.scale(y);
+			.scale(y)
+			.ticks(10, "%");
 
 		var chart = d3.select(".chart")
 			.attr("width", width +margin.left +margin.right)
@@ -64,14 +58,19 @@
 			x.domain(data.map(function(d){ return d.name; } ));
 			y.domain([0, d3.max(data, function(d){ return d.value; } )]);
 
-			chart.append("svg")
+			chart.append("g")
 				.attr("class", "x axis")
-				.append("g")
 				.attr("transform", "translate(0,"+ height +")")
 				.call(xAxis);
 			chart.append("g")
 				.attr("class", "y axis")
-				.call(yAxis);
+				.call(yAxis)
+			.append("text")
+				.attr("transform", "rotate(-90)")
+				.attr("y", 6)
+				.attr("dy", "0.71em")
+				.style("text-anchor", "end")
+				.text("Frequency");
 
 			var bar = chart.selectAll(".bar")
 				.data(data)
